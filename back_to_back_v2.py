@@ -17,6 +17,7 @@ st.markdown('# Resposta transitória da energização de capacitores DAX-Energy'
 col1, col2 = st.columns([3, 1])
 
 with col1:
+    df = pd.read_excel('Dados_do_sistema_e_capacitores.xlsx', usecols=[1,2,3,4,5,6,7,8,9], header=1)
     st.image(image='Sistema.png', width=500)
     uploaded_file = st.file_uploader("Choose the file")
     if uploaded_file is not None:
@@ -75,7 +76,7 @@ den_i = L_eq * omega
 i_pico_inical =  FC * num_i / den_i
 sigma = R_eq/(2*L_eq)
 
-t = np.linspace(0, 5/sigma, 2**14 )
+t = np.linspace(0, 5/sigma, 10000 )
 i_curto = i_pico_inical * np.exp(-sigma*t) * np.sin(omega*t)
 
 import plotly.graph_objects as go
