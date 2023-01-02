@@ -24,7 +24,7 @@ with col0:
 
 with col1:
     FC              = st.slider("Fator de Segurança",  min_value=1.0, max_value=1.5, value=1.4, step=0.1)
-    nr_bancos       = st.slider("Número de Bancos",    min_value=2,   max_value=10,  value=4,   step=1)
+    nr_bancos       = st.slider("Número de Bancos",    min_value=2,   max_value=20,  value=4,   step=1)
 
 with col1:
     V_ff        =   st.number_input("Tensão 3𝝋 [kV]", min_value=13.8,  max_value=380.0, value=23.1, step=0.1) * 1e3
@@ -82,7 +82,7 @@ with cols[ii]:
 ii = ii + 1
 with cols[ii]:
         L_capacitor[k] =  st.number_input("$L_{\\rm capacitor} {\\rm \\left[{\\mu H} \\right]}$",
-                                        min_value=0.0,  max_value=100.0, value=0.50, step=0.01,
+                                        min_value=0.0,  max_value=100.0, value=5.00, step=0.01,
                                         key="L_capacitor"+str(k)) * 1e-6
 ii = ii + 1
 with cols[ii]:
@@ -126,7 +126,7 @@ for k in range(1, nr_bancos):
     ii = ii + 1
     with cols[ii]:
         L_capacitor[k] = st.number_input("$L_{\\rm capacitor} {\\rm \\left[{\\mu H} \\right]}$",
-                                         min_value=0.0, max_value=100.0, value=0.50, step=0.01,
+                                         min_value=0.0, max_value=100.0, value=5.00, step=0.01,
                                          key="L_capacitor" + str(k)) * 1e-6
     ii = ii + 1
     with cols[ii]:
