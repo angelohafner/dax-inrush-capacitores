@@ -4,10 +4,13 @@ Angelo Alfredo Hafner
 aah@dax.energy
 """
 import numpy as np
+
 import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 from engineering_notation import EngNumber
+from pylatex import Document, Section, Subsection, Tabular, Math, TikZ, Axis, Plot, Figure, Matrix, Alignat, Itemize
+import os
 st.set_page_config(layout="wide")
 R_eq = 0.1
 
@@ -62,22 +65,22 @@ with cols[ii]:
 ii = ii + 1
 with cols[ii]:
         comp_cabo[k] =  st.number_input("$\\ell_{\\rm cabo}{\\rm [m]}$",
-                                        min_value=0.01,  max_value=100.0, value=20.0, step=0.01,
+                                        min_value=0.0,  max_value=100.0, value=0.0, step=0.01,
                                         key="comp_cabo"+str(k))
 ii = ii + 1
 with cols[ii]:
         comp_barra[k] =  st.number_input("$\\ell_{\\rm barra}{\\rm [m]}$",
-                                        min_value=0.01,  max_value=100.0, value=20.0, step=0.01,
+                                        min_value=0.0,  max_value=100.0, value=0.0, step=0.01,
                                         key="comp_barra"+str(k))
 ii = ii + 1
 with cols[ii]:
         L_unit_cabo[k] =  st.number_input("$L'_{\\rm cabo} {\\rm \\left[{\\mu H}/{m} \\right]}$",
-                                        min_value=0.01,  max_value=100.0, value=0.40, step=0.01,
+                                        min_value=0.00,  max_value=100.0, value=0.00, step=0.01,
                                         key="L_unit_cabo"+str(k)) * 1e-6
 ii = ii + 1
 with cols[ii]:
         L_unit_barra[k] =  st.number_input("$L'_{\\rm barra} {\\rm \\left[{\\mu H}/{m} \\right]}$",
-                                        min_value=0.0,  max_value=100.0, value=0.33, step=0.01,
+                                        min_value=0.0,  max_value=100.0, value=0.00, step=0.01,
                                         key="L_unit_barra"+str(k)) * 1e-6
 ii = ii + 1
 with cols[ii]:
@@ -87,7 +90,7 @@ with cols[ii]:
 ii = ii + 1
 with cols[ii]:
         L_reator[k] =  st.number_input("$L_{\\rm reator} {\\rm \\left[{\\mu H} \\right]}$",
-                                        min_value=0.0,  max_value=1000.0, value=200.0, step=1.0,
+                                        min_value=0.0,  max_value=1000.0, value=100.0, step=1.0,
                                         key="L_reator"+str(k)) * 1e-6
 
 
@@ -106,22 +109,22 @@ for k in range(1, nr_bancos):
     ii = ii + 1
     with cols[ii]:
         comp_cabo[k] = st.number_input("$\\ell_{\\rm cabo}{\\rm [m]}$",
-                                       min_value=0.01, max_value=100.0, value=20.0, step=0.01,
+                                       min_value=0.0, max_value=100.0, value=0.0, step=0.01,
                                        key="comp_cabo" + str(k))
     ii = ii + 1
     with cols[ii]:
         comp_barra[k] = st.number_input("$\\ell_{\\rm barra}{\\rm [m]}$",
-                                        min_value=0.0, max_value=100.0, value=20.0, step=0.01,
+                                        min_value=0.0, max_value=100.0, value=0.0, step=0.01,
                                         key="comp_barra" + str(k))
     ii = ii + 1
     with cols[ii]:
         L_unit_cabo[k] = st.number_input("$L'_{\\rm cabo} {\\rm \\left[{\\mu H}/{m} \\right]}$",
-                                         min_value=0.0, max_value=100.0, value=0.40, step=0.01,
+                                         min_value=0.0, max_value=100.0, value=0.00, step=0.01,
                                          key="L_unit_cabo" + str(k)) * 1e-6
     ii = ii + 1
     with cols[ii]:
         L_unit_barra[k] = st.number_input("$L'_{\\rm barra} {\\rm \\left[{\\mu H}/{m} \\right]}$",
-                                          min_value=0.0, max_value=100.0, value=0.33, step=0.01,
+                                          min_value=0.0, max_value=100.0, value=0.00, step=0.01,
                                           key="L_unit_barra" + str(k)) * 1e-6
     ii = ii + 1
     with cols[ii]:
@@ -131,7 +134,7 @@ for k in range(1, nr_bancos):
     ii = ii + 1
     with cols[ii]:
         L_reator[k] = st.number_input("$L_{\\rm reator} {\\rm \\left[{\\mu H} \\right]}$",
-                                      min_value=0.0, max_value=1000.0, value=200.0, step=1.0,
+                                      min_value=0.1, max_value=10000.0, value=100.0, step=1.0,
                                       key="L_reator" + str(k)) * 1e-6
 
 
@@ -162,9 +165,8 @@ den_i = L_eq * omega
 i_pico_inical =  FC * num_i / den_i
 sigma = R_eq/(2*L_eq)
 
-t = np.linspace(0, 1/60, 50000 )
+t = np.linspace(0, 1/60, int(2**10))
 i_curto = i_pico_inical * np.exp(-sigma*t) * np.sin(omega*t)
-
 
 
 fig = go.Figure()
@@ -204,21 +206,80 @@ fig.update_layout(legend_title_text='Corrente:', title_text="Inrush Banco de Cap
                   xaxis_title=r"Tempo [ms]", yaxis_title="Corrente [kA]" )
 st.plotly_chart(fig, use_container_width=True)
 
-st.write("Corrente de pico considerada = ",         EngNumber(i_pico_inical), "A")
-st.write("Ireal/Iconsiderado =",                    np.round(np.max(i_curto)/i_pico_inical, 2))
-st.write("Frequência de Oscilação = ",              EngNumber(omega/(2*np.pi)), "Hz")
-st.write("Harmônico de Oscilação = ",               EngNumber(omega/w_fund))
-temp = i_pico_inical/I_fn[0]
-st.write("$\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $",   EngNumber(temp))
 
-st.markdown('## Conclusão')
-if temp < 100:
-    st.write("Reator adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} < 100 $")
-else:
-    st.write("Reator não adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} \\ge 100 $")
+coluna0, coluna1 = st.columns([1, 1])
+
+with coluna0:
+    st.write("Corrente de pico considerada = ",         EngNumber(i_pico_inical), "A")
+    # st.write("Ireal/Iconsiderado =",                    np.round(np.max(i_curto)/i_pico_inical, 2))
+    st.write("Frequência de Oscilação = ",              EngNumber(omega/(2*np.pi)), "Hz")
+    st.write("Harmônico de Oscilação = ",               EngNumber(omega/w_fund))
+    temp = i_pico_inical/(I_fn[0]*np.sqrt(2))
+
+with coluna1:
+    st.markdown('## Conclusão')
+    conclusao1 = "cuidado aqui"
+    if temp < 100:
+        conclusao1 = "Reator adequado"
+        st.write("Reator adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $", EngNumber(temp), "$\\le 100$.")
+    else:
+        st.write("Reator não adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $", EngNumber(temp), "$\\ge 100.$")
+        conclusao1 = "Reator não adequado"
+
+    cem = str(EngNumber(temp))
 
 
 st.markdown('## Bibliografia')
 st.write("[IEEE Application Guide for Capacitance Current Switching for AC High-Voltage Circuit Breakers Rated on a Symmetrical Current Basis](https://ieeexplore.ieee.org/document/7035261)")
 
 
+# ===============================================================================================================
+# RELATORIO
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import datetime as dt
+from docx2pdf import convert
+t = np.asarray(t)
+i_curto = i_pico_inical * np.exp(-sigma*t) * np.sin(omega*t)
+mpl.rcParams.update({'font.size': 8})
+cm = 1/2.54
+fig_mpl, ax_mpl = plt.subplots(figsize=(16*cm,7*cm))
+ax_mpl.plot(t*1e3,  i_curto/1e3,                             label='$i(t)$', color='blue', lw=1.0)
+ax_mpl.plot(t*1e3,  i_pico_inical * np.exp(-sigma*t)/1e3,                    color='gray', ls='--',   lw=0.5)
+ax_mpl.plot(t*1e3, -i_pico_inical * np.exp(-sigma*t)/1e3,                    color='gray', ls='--',   lw=0.5)
+ax_mpl.plot(t*1e3,  i_pico_inical * np.sin(2*np.pi*f_fund*t)/1e3, label='$60 {\\rm Hz}$', color='gray', alpha=0.5, lw=1.0)
+ax_mpl.set_xlabel('Tempo [ms]')
+ax_mpl.set_ylabel('Corrente [kA]')
+ax_mpl.legend()
+fig_mpl.savefig('Correntes.png', bbox_inches='tight', dpi=200)
+
+
+from docxtpl import DocxTemplate, InlineImage
+import datetime as dt
+from docx2pdf import convert
+
+#dt.datetime.now().strftime("%d-%b-%Y")
+# create a document object
+docx = DocxTemplate("Inrush_template_word.docx")
+
+
+context = {
+    "Correntes_figura": InlineImage(docx, "Correntes.png"),
+    "indutância_escolhida": str(EngNumber(L_reator[0])),
+    "corrente_pico": str(EngNumber(i_pico_inical)),
+    "frequencia_oscilacao": str(EngNumber(omega/(2*np.pi))),
+    "inrush_inominal": str(int(i_pico_inical/(I_fn[0]*np.sqrt(2)))),
+    "conclusao1": conclusao1,
+    "cem": cem,
+    "data": dt.datetime.now().strftime("%d-%b-%Y")
+}
+docx.render(context)
+docx.save('Relatorio_Inrush_DAX.docx')
+
+with open("Relatorio_Inrush_DAX.docx", "rb") as file:
+    btn = st.download_button(
+            label="Download Relatório",
+            data=file,
+            file_name="Relatorio_Inrush_DAX.docx",
+            mime="Relatorio_Inrush_DAX/docx"
+            )
