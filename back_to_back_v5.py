@@ -266,8 +266,8 @@ if st.button('Gerar Relatório'):
     flag_relatorio = 1
 
 if flag_relatorio:
-    import docx2pdf
-    docx2pdf.convert("Relatorio_Inrush_DAX.docx", "Relatorio_Inrush_DAX.pdf")
+#     import docx2pdf
+#     docx2pdf.convert("Relatorio_Inrush_DAX.docx", "Relatorio_Inrush_DAX.pdf")
 
     with open("Relatorio_Inrush_DAX.docx", "rb") as pdf_file:
         PDFbyte = pdf_file.read()
