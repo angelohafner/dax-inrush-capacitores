@@ -5,9 +5,9 @@ aah@dax.energy
 # import pythoncom
 # import win32com
 # win32com.client.Dispatch("Word.Application", pythoncom.CoInitialize())
-import locale
+# import locale
 
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+# locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 import numpy as np
 
