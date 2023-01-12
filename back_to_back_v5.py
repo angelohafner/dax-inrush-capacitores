@@ -2,9 +2,9 @@
 Angelo Alfredo Hafner
 aah@dax.energy
 """
-import pythoncom
-import win32com.client
-win32com.client.Dispatch("Word.Application", pythoncom.CoInitialize())
+# import pythoncom
+# import win32com.client
+# win32com.client.Dispatch("Word.Application", pythoncom.CoInitialize())
 # import locale
 #
 # locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
