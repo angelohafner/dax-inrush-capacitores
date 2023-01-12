@@ -266,15 +266,15 @@ if st.button('Gerar Relatório'):
     flag_relatorio = 1
 
 if flag_relatorio:
-    import docx2pdf
-    docx2pdf.convert("Relatorio_Inrush_DAX.docx", "Relatorio_Inrush_DAX.pdf")
+    # import docx2pdf
+    # docx2pdf.convert("Relatorio_Inrush_DAX.docx", "Relatorio_Inrush_DAX.pdf")
 
-    with open("Relatorio_Inrush_DAX.pdf", "rb") as pdf_file:
+    with open("Relatorio_Inrush_DAX.docx", "rb") as pdf_file:
         PDFbyte = pdf_file.read()
 
         st.download_button(label="Download",
                         data=PDFbyte,
-                        file_name="Relatorio_Inrush_DAX.pdf",
+                        file_name="Relatorio_Inrush_DAX.docx",
                         mime='application/octet-stream')
 
 colunas = st.columns(2)
