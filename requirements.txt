@@ -1,4 +1,4 @@
-﻿pythoncom
+
  altair==4.2.0
 aspose-words==22.12.0
 attrs==22.1.0
