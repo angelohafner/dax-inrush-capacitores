@@ -49,8 +49,7 @@ with col2:
     V_fn        =   V_ff / np.sqrt(3)
     f_fund      =   st.number_input("Frequência [Hz]", min_value=50.0,  max_value=60.0, value=60.0, step=0.1)
     w_fund      =   2*np.pi*f_fund
-    R_eq        =   st.number_input("Resistência [mΩ]", min_value=0,  max_value=500, value=200, step=1) * 1e-3
-    # L_reator_   =   st.number_input("Indutância  [μH]", min_value=0,  max_value=2000, value=200, step=1) * 1e-6
+    nr_bancos        =   st.number_input("Número de Bancos", min_value=1,  max_value=11, value=2, step=1)
     
 
 grid_table = show_grid(df)
