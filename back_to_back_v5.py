@@ -230,13 +230,13 @@ st.plotly_chart(fig, use_container_width=True)
 
 # with coluna0:
 st.markdown('#### Resultados')
-st.markdown('##### Para o banco isolado')
+st.markdown('##### Para o banco isolado (sem outros bancos energizados)')
 temp = i_pico_inicial_isolado / (I_fn[0] * np.sqrt(2))
 st.write("Corrente de pico na energização $I_{\\rm{inrsuh}}=$",
-         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(temp, 1), "$I_{\\rm{nominal}}$.")
+         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(temp, 1), "$I_{\\rm{nominal}}$")
 st.write("Frequência de Oscilação = ", EngNumber(w_isolado / (2 * np.pi)), "${\\rm Hz}$, que corresponde a",
-         np.round(w_isolado / w_fund, 1), "$f_1$, com $\max \left( {\\frac{{di}}{{dt}}} \\right) = $", EngNumber((V_fn*np.sqrt(2)/L_eq_isolado)/1e6), "$\\frac{{\\rm{V}}}{{{\\rm{\\mu s}}}}$")
-st.markdown('##### Para vários bancos em derivação')
+         np.round(w_isolado / w_fund, 1), "$f_1$")#, com $\max \left( {\\frac{{di}}{{dt}}} \\right) = $", EngNumber((V_fn*np.sqrt(2)/L_eq_isolado)/1e6), "$\\frac{{\\rm{V}}}{{{\\rm{\\mu s}}}}$")
+st.markdown('##### Para o banco $\#0$ e os demais bancos energizados')
 temp = i_pico_inical / (I_fn[0] * np.sqrt(2))
 st.write("Corrente de pico na energização $I_{\\rm{inrsuh}}=$",
          EngNumber(i_pico_inical), "${\\rm A}$, que corresponde a", np.round(temp, 1), "$I_{\\rm{nominal}}$")
@@ -247,27 +247,39 @@ st.write("Frequência de Oscilação = ", EngNumber(omega / (2 * np.pi)), "${\\r
 # with coluna1:
 st.markdown('#### Conclusão')
 st.markdown(
-    'As amplitudes típicas das correntes de *inrush* para energização *back-to-back* de bancos de capacitores são de vários ${\\rm kA}$ com frequências de $2{\\rm~kHz}$ a $5{\\rm~kHz}$ [$^{[2]}$](https://standards.ieee.org/ieee/C37.66/4937/).')
+    'As amplitudes típicas das correntes de *inrush* para energização *back-to-back* de bancos de capacitores são de vários ${\\rm kA}$ com frequências de $2{\\rm~kHz}$ a $5{\\rm~kHz}$ [$^{[1]}$](https://ieeexplore.ieee.org/document/7035261).')
 conclusao1 = "cuidado aqui"
 if temp < 100:
     conclusao1 = "Reator adequado, conforme IEEE Std C37.012, página 16."
     st.write("Reator adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $", EngNumber(temp),
-             "$\\le 100$, conforme IEEE Std C37.012, página 16[$^{[2]}$](https://standards.ieee.org/ieee/C37.66/4937/).")
+             "$\\le 100$, conforme IEEE Std C37.012, página 16[$^{[2]}$](https://ieeexplore.ieee.org/document/7035261).")
 else:
     st.write("Reator não adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $", EngNumber(temp),
-             "$\\ge 100.$, conforme IEEE Std C37.012, página 16[$^{[2]}$](https://standards.ieee.org/ieee/C37.66/4937/).")
+             "$\\ge 100.$, conforme IEEE Std C37.012, página 16[$^{[2]}$](https://ieeexplore.ieee.org/document/7035261).")
     conclusao1 = "Reator não adequado, conforme IEEE Std C37.012, página 16."
 
 cem = str(EngNumber(temp))
 
-st.markdown('##### Bibliografia')
-"""
-
-[[1]](https://ieeexplore.ieee.org/document/7035261) IEEE Application Guide for Capacitance Current Switching for AC High-Voltage Circuit Breakers Rated on a Symmetrical Current Basis," in ANSI/IEEE C37.012-1979 , vol., no., pp.1-54, 6 Feb. 1979, doi: 10.1109/IEEESTD.1979.7035261.\\
-[[2]](https://ieeexplore.ieee.org/document/9574631) EEE Approved Draft Standard Requirements for Capacitor Switches for AC Systems (1 kV to 38 kV)," in IEEE PC37.66/D10, October 2021 , vol., no., pp.1-35, 13 Dec. 2021.\\
-[[3]](https://cdn.standards.iteh.ai/samples/101972/4e7e06bd66d2443da668b8e0c6c60512/IEC-62271-100-2021.pdf) IEC 62271-100 High-voltage switchgear and controlgear – Part 100: Alternating-current circuit-breakers\\
-[[4]](https://www.normas.com.br/autorizar/visualizacao-nbr/313/identificar/visitante) NBR 5282 Capacitores de potência em derivação para sistema de tensão nominal acima de 1000 V
-"""
+st.markdown('#### Bibliografia')
+col_bib1, col_bib2 = st.columns([1, 25])
+with col_bib1:
+    """
+    [[1]](https://ieeexplore.ieee.org/document/7035261)\\
+    \\
+    \\
+    [[2]](https://ieeexplore.ieee.org/document/9574631)\\
+    \\
+    [[3]](https://cdn.standards.iteh.ai/samples/101972/4e7e06bd66d2443da668b8e0c6c60512/IEC-62271-100-2021.pdf)\\
+    \\
+    [[4]](https://www.normas.com.br/autorizar/visualizacao-nbr/313/identificar/visitante)
+    """
+with col_bib2:
+    """
+    IEEE Application Guide for Capacitance Current Switching for AC High-Voltage Circuit Breakers Rated on a Symmetrical Current Basis, in ANSI/IEEE C37.012-1979 , vol., no., pp.1-54, 6 Feb. 1979, doi: 10.1109/IEEESTD.1979.7035261.\\
+    IEEE Approved Draft Standard Requirements for Capacitor Switches for AC Systems (1 kV to 38 kV), in IEEE PC37.66/D10, October 2021 , vol., no., pp.1-35, 13 Dec. 2021.\\
+    IEC 62271-100 High-voltage switchgear and controlgear – Part 100: Alternating-current circuit-breakers\\
+    NBR 5282 Capacitores de potência em derivação para sistema de tensão nominal acima de 1000 V
+    """
 
 # ===============================================================================================================
 # RELATORIO
