@@ -47,7 +47,7 @@ L_unit_barra = np.zeros(nr_bancos)
 L_capacitor = np.zeros(nr_bancos)
 L_reator = np.zeros(nr_bancos)
 
-st.markdown("#### Banco a ser energizado: $(\#0)$")
+st.markdown("#### Banco a ser energizado $(\#0)$")
 cols = st.columns(5)
 ii = 0
 k = 0
@@ -269,14 +269,18 @@ with col_bib1:
     \\
     [[2]](https://ieeexplore.ieee.org/document/9574631)\\
     \\
-    [[3]](https://cdn.standards.iteh.ai/samples/101972/4e7e06bd66d2443da668b8e0c6c60512/IEC-62271-100-2021.pdf)\\
+    [[3]](https://ieeexplore.ieee.org/document/5318709)\\
     \\
-    [[4]](https://www.normas.com.br/autorizar/visualizacao-nbr/313/identificar/visitante)
+    \\
+    [[4]](https://cdn.standards.iteh.ai/samples/101972/4e7e06bd66d2443da668b8e0c6c60512/IEC-62271-100-2021.pdf)\\
+    \\
+    [[5]](https://www.normas.com.br/autorizar/visualizacao-nbr/313/identificar/visitante)
     """
 with col_bib2:
     """
     IEEE Application Guide for Capacitance Current Switching for AC High-Voltage Circuit Breakers Rated on a Symmetrical Current Basis, in ANSI/IEEE C37.012-1979 , vol., no., pp.1-54, 6 Feb. 1979, doi: 10.1109/IEEESTD.1979.7035261.\\
     IEEE Approved Draft Standard Requirements for Capacitor Switches for AC Systems (1 kV to 38 kV), in IEEE PC37.66/D10, October 2021 , vol., no., pp.1-35, 13 Dec. 2021.\\
+    IEEE Standard for AC High-Voltage Circuit Breakers Rated on a Symmetrical Current Basis--Preferred Ratings and Related Required Capabilities for Voltages Above 1000 V, in IEEE Std C37.06-2009 , vol., no., pp.1-56, 6 Nov. 2009, doi: 10.1109/IEEESTD.2009.5318709.\\
     IEC 62271-100 High-voltage switchgear and controlgear – Part 100: Alternating-current circuit-breakers\\
     NBR 5282 Capacitores de potência em derivação para sistema de tensão nominal acima de 1000 V
     """
