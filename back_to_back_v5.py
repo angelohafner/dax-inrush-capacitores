@@ -10,10 +10,36 @@ aah@dax.energy
 # locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 
 import numpy as np
-
+import base64
 import streamlit as st
 import plotly.graph_objects as go
 from engineering_notation import EngNumber
+
+
+# ===================================================================================
+def get_base64(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_background(png_file):
+    bin_str = get_base64(png_file)
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
+set_background('DAX_RGB-4.png')
+
+# ===================================================================================
+
+
+
 
 # st.set_page_config(layout="wide")
 R_eq = 0.1
@@ -29,7 +55,7 @@ with col0:
     f_fund = st.number_input("Frequência [Hz]", min_value=40.0, max_value=70.0, value=60.0, step=0.1, format="%.1f")
     w_fund = 2 * np.pi * f_fund
     I_curto_circuito = st.number_input("Corrente de curto-circuito na barra [kA]", min_value=0.0, max_value=1000.0,
-                                       value=100.0, step=1.0, format="%.0f") * 1e3
+                                       value=25.0, step=1.0, format="%.0f") * 1e3
     nr_bancos = st.slider("Número de Bancos", min_value=2, max_value=20, value=4, step=1)
     FC = st.slider("Fator de Segurança", min_value=1.0, max_value=1.5, value=1.4, step=0.1, format="%.1f")
 
@@ -230,18 +256,19 @@ st.plotly_chart(fig, use_container_width=True)
 
 # with coluna0:
 st.markdown('#### Resultados')
-st.markdown('##### Para o banco isolado (sem outros bancos energizados)')
+st.write("Corrente nominal do banco $I_{\\rm nominal}=$", EngNumber(I_fn[0]), "A")
+st.markdown('##### Para banco único')
 temp = i_pico_inicial_isolado / (I_fn[0] * np.sqrt(2))
 st.write("Corrente de pico na energização $I_{\\rm{inrsuh}}=$",
-         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(temp, 1), "$I_{\\rm{nominal}}$")
+         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(temp, 1), "$\\times I_{\\rm{nominal}}$")
 st.write("Frequência de Oscilação = ", EngNumber(w_isolado / (2 * np.pi)), "${\\rm Hz}$, que corresponde a",
-         np.round(w_isolado / w_fund, 1), "$f_1$")#, com $\max \left( {\\frac{{di}}{{dt}}} \\right) = $", EngNumber((V_fn*np.sqrt(2)/L_eq_isolado)/1e6), "$\\frac{{\\rm{V}}}{{{\\rm{\\mu s}}}}$")
-st.markdown('##### Para o banco $\#0$ e os demais bancos energizados')
+         np.round(w_isolado / w_fund, 1), "$\\times f_1$")#, com $\max \left( {\\frac{{di}}{{dt}}} \\right) = $", EngNumber((V_fn*np.sqrt(2)/L_eq_isolado)/1e6), "$\\frac{{\\rm{V}}}{{{\\rm{\\mu s}}}}$")
+st.markdown('##### Para banco com os demais bancos energizados')
 temp = i_pico_inical / (I_fn[0] * np.sqrt(2))
 st.write("Corrente de pico na energização $I_{\\rm{inrsuh}}=$",
-         EngNumber(i_pico_inical), "${\\rm A}$, que corresponde a", np.round(temp, 1), "$I_{\\rm{nominal}}$")
+         EngNumber(i_pico_inical), "${\\rm A}$, que corresponde a", np.round(temp, 1), "$\\times I_{\\rm{nominal}}$")
 st.write("Frequência de Oscilação = ", EngNumber(omega / (2 * np.pi)), "${\\rm Hz}$, que corresponde a",
-         np.round(omega / w_fund, 1), "$f_1$")
+         np.round(omega / w_fund, 1), "$\\times f_1$")
 # st.write("Harmônico de Oscilação = ", EngNumber(omega / w_fund))
 
 # with coluna1:
