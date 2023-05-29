@@ -34,7 +34,7 @@ def set_background(png_file):
     ''' % bin_str
     st.markdown(page_bg_img, unsafe_allow_html=True)
 
-set_background('DAX_RGB-4.png')
+# set_background('DAX_RGB-4.png')
 
 # ===================================================================================
 
@@ -80,8 +80,8 @@ k = 0
 k = 0
 with cols[ii]:
     Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                              min_value=100.0, max_value=100e3, value=12000.0, step=1.0,
-                              key="Q_3f_" + str(k), format="%.0f") * 1e3
+                              min_value=0.01, max_value=100e3, value=100.00, step=0.01,
+                              key="Q_3f_" + str(k), format="%.2f") * 1e3
 ii = ii + 1
 with cols[ii]:
     comp_cabo[k] = st.number_input("$\\ell_{\\rm cabo}{\\rm [m]}$",
@@ -121,12 +121,12 @@ for k in range(1, nr_bancos):
     with cols[ii]:
         if k == 1:
             Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                                      min_value=100.0, max_value=100e3, value=12000.0, step=0.0,
-                                      key="Q_3f_" + str(k), format="%.0f", label_visibility="visible") * 1e3
+                                      min_value=0.01, max_value=100e3, value=100.00, step=0.01,
+                                      key="Q_3f_" + str(k), format="%.2f", label_visibility="visible") * 1e3
         else:
             Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                                      min_value=100.0, max_value=100e3, value=12000.0, step=0.0,
-                                      key="Q_3f_" + str(k), format="%.0f", label_visibility="collapsed") * 1e3
+                                      min_value=0.01, max_value=100e3, value=100.00, step=0.01,
+                                      key="Q_3f_" + str(k), format="%.2f", label_visibility="collapsed") * 1e3
     ii = ii + 1
     with cols[ii]:
         if k == 1:
@@ -211,7 +211,7 @@ den_i = L_eq * omega
 i_pico_inical = FC * num_i / den_i
 sigma = R_eq / (2 * L_eq)
 
-t = np.linspace(0, 1 / 60, 1 * int(2 ** 10))
+t = np.linspace(0, 1 / 60, 1 * int(2 ** 12))
 i_curto = i_pico_inical * np.exp(-sigma * t) * np.sin(omega * t)
 # i_curto = i_curto + I_fn[0] * np.sqrt(2) * np.sin(w_fund * t)
 
