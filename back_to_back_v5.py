@@ -50,7 +50,7 @@ st.markdown('# Resposta transitória da corrente de energização de capacitores
 
 col0, col1, col2 = st.columns([2, 0.2, 8])
 with col0:
-    V_ff = st.number_input("Tensão 3𝝋 [kV]", min_value=13.8, max_value=380.0, value=23.1, step=0.1, format="%.1f") * 1e3
+    V_ff = st.number_input("Tensão 3𝝋 [kV]", min_value=0.1, max_value=750.0, value=23.1, step=0.1, format="%.1f") * 1e3
     V_fn = V_ff / np.sqrt(3)
     f_fund = st.number_input("Frequência [Hz]", min_value=40.0, max_value=70.0, value=60.0, step=0.1, format="%.1f")
     w_fund = 2 * np.pi * f_fund
