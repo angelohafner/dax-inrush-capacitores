@@ -2,46 +2,44 @@
 Angelo Alfredo Hafner
 aah@dax.energy
 """
-# import pythoncom
-# import win32com.client
-# win32com.client.Dispatch("Word.Application", pythoncom.CoInitialize())
-# import locale
-#
-# locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-
+import locale
+locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 import numpy as np
 import base64
 import streamlit as st
 import plotly.graph_objects as go
 from engineering_notation import EngNumber
-
-
+import os
+import shutil
+import matplotlib as mpl
+mpl.rcParams['text.usetex'] = True
+mpl.rcParams['font.family'] = 'serif'  # ou 'sans-serif'
 # ===================================================================================
-def get_base64(bin_file):
-    with open(bin_file, 'rb') as f:
-        data = f.read()
-    return base64.b64encode(data).decode()
+def substituir_valores(arquivo_tex, valores):
+    with open(arquivo_tex, 'r') as file:
+        filedata = file.read()
 
-def set_background(png_file):
-    bin_str = get_base64(png_file)
-    page_bg_img = '''
-    <style>
-    .stApp {
-    background-image: url("data:image/png;base64,%s");
-    background-size: cover;
-    }
-    </style>
-    ''' % bin_str
-    st.markdown(page_bg_img, unsafe_allow_html=True)
+    for chave, valor in valores.items():
+        filedata = filedata.replace('{{' + chave + '}}', str(valor))
 
-# set_background('DAX_RGB-4.png')
+    with open(arquivo_tex, 'w') as file:
+        file.write(filedata)
 
+
+
+# files_to_delete = [
+#     "Relatorio_Inrush_DAX.aux",
+#     "Relatorio_Inrush_DAX.log",
+#     "Relatorio_Inrush_DAX.out",
+#     "Relatorio_Inrush_DAX.synctex.gz"
+# ]
+#
+# # Loop para excluir cada arquivo
+# for file in files_to_delete:
+#     if os.path.exists(file):
+#         os.remove(file)
 # ===================================================================================
 
-
-
-
-# st.set_page_config(layout="wide")
 R_eq = 0.1
 
 # ===================================================================================
@@ -277,15 +275,15 @@ st.markdown(
     'As amplitudes típicas das correntes de *inrush* para energização *back-to-back* de bancos de capacitores são de vários ${\\rm kA}$ com frequências de $2{\\rm~kHz}$ a $5{\\rm~kHz}$ [$^{[1]}$](https://ieeexplore.ieee.org/document/7035261).')
 conclusao1 = "cuidado aqui"
 if temp < 100:
-    conclusao1 = "Reator adequado, conforme IEEE Std C37.012, página 16."
+    conclusao1 = "Reator adequado, conforme IEEE Std C37.012, p\\'{a}gina 16."
     st.write("Reator adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $", EngNumber(temp),
              "$\\le 100$, conforme IEEE Std C37.012, página 16[$^{[2]}$](https://ieeexplore.ieee.org/document/7035261).")
 else:
     st.write("Reator não adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $", EngNumber(temp),
              "$\\ge 100.$, conforme IEEE Std C37.012, página 16[$^{[2]}$](https://ieeexplore.ieee.org/document/7035261).")
-    conclusao1 = "Reator não adequado, conforme IEEE Std C37.012, página 16."
+    conclusao1 = "Reator n\~{a}o adequado, conforme IEEE Std C37.012, p\\'{a}gina 16."
 
-cem = str(EngNumber(temp))
+cem = temp
 
 st.markdown('#### Bibliografia')
 col_bib1, col_bib2 = st.columns([1, 25])
@@ -332,38 +330,39 @@ ax_mpl.plot(t * 1e3, i_pico_inical * np.sin(2 * np.pi * f_fund * t) / 1e3, label
 ax_mpl.set_xlabel('Tempo [ms]')
 ax_mpl.set_ylabel('Corrente [kA]')
 ax_mpl.legend()
-fig_mpl.savefig('Correntes.png', bbox_inches='tight', dpi=200)
+fig_mpl.savefig('figs/Correntes.png', bbox_inches='tight', dpi=600)
 
 flag_relatorio = 0
 if st.button('Gerar Relatório'):
-    from docxtpl import DocxTemplate, InlineImage
-    import datetime as dt
+    arquivo_original_tex = 'TEMPLATE_Relatorio_Inrush_DAX.tex'
+    arquivo_copiado_tex = 'Relatorio_Inrush_DAX.tex'
+    shutil.copy(arquivo_original_tex, arquivo_copiado_tex)
 
-    doc = DocxTemplate("Inrush_template_word.docx")
-    context = {
-        "Correntes_figura": InlineImage(doc, "Correntes.png"),
-        "indutância_escolhida": str(EngNumber(L_reator[0])),
-        "corrente_pico": str(EngNumber(i_pico_inical)),
-        "frequencia_oscilacao": str(EngNumber(omega / (2 * np.pi))),
-        "inrush_inominal": str(int(i_pico_inical / (I_fn[0] * np.sqrt(2)))),
+    # Valores a serem substituídos
+    valores = {
+        "indutancia_escolhida": locale.format_string("%.2f", 1e6*L_reator[0], grouping=True),
+        "corrente_pico":        locale.format_string("%.2f", i_pico_inical, grouping=True),
+        "frequencia_oscilacao": locale.format_string("%.2f", omega / (2 * np.pi), grouping=True),
+        "inrush_inominal":      locale.format_string("%.0f", i_pico_inical / (I_fn[0] * np.sqrt(2)), grouping=True),
         "conclusao1": conclusao1,
-        "cem": cem,
-        "data": dt.datetime.now().strftime("%d-%b-%Y")
+        "cem": locale.format_string("%.0f", cem, grouping=True)
     }
-    doc.render(context)
-    doc.save('Relatorio_Inrush_DAX.docx')
+
+    # Substituindo os valores no arquivo copiado
+    substituir_valores(arquivo_copiado_tex, valores)
+
+    # Compilar o arquivo .tex para criar um PDF
+    os.system(f"xelatex {arquivo_copiado_tex}")
     flag_relatorio = 1
 
-if flag_relatorio:
-    # import docx2pdf
-    # docx2pdf.convert("Relatorio_Inrush_DAX.docx", "Relatorio_Inrush_DAX.pdf")
 
-    with open("Relatorio_Inrush_DAX.docx", "rb") as pdf_file:
+if flag_relatorio:
+    with open("Relatorio_Inrush_DAX.pdf", "rb") as pdf_file:
         PDFbyte = pdf_file.read()
 
         st.download_button(label="Download",
                            data=PDFbyte,
-                           file_name="Relatorio_Inrush_DAX.docx",
+                           file_name="Relatorio_Inrush_DAX.pdf",
                            mime='application/octet-stream')
 
 st.markdown('#### Desenvolvimento')
@@ -383,3 +382,4 @@ with colunas[1]:
     Mobile: +55 41 99940-3744\\
     tm@dax.energy
     """
+
