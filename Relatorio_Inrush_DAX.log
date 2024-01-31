@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 23.5) (preloaded format=xelatex 2024.1.7)  7 JAN 2024 12:19
+This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 23.5) (preloaded format=xelatex 2024.1.7)  31 JAN 2024 14:30
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -414,58 +414,75 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip65
 )
+(C:\Users\angel\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen168
+\lightrulewidth=\dimen169
+\cmidrulewidth=\dimen170
+\belowrulesep=\dimen171
+\belowbottomsep=\dimen172
+\aboverulesep=\dimen173
+\abovetopsep=\dimen174
+\cmidrulesep=\dimen175
+\cmidrulekern=\dimen176
+\defaultaddspace=\dimen177
+\@cmidla=\count290
+\@cmidlb=\count291
+\@aboverulesep=\dimen178
+\@belowrulesep=\dimen179
+\@thisruleclass=\count292
+\@lastruleclass=\count293
+\@thisrulewidth=\dimen180
+)
 (C:\Users\angel\AppData\Local\Programs\MiKTeX\tex/latex/titlesec\titlesec.sty
 Package: titlesec 2023/10/17 v2.15 Sectioning titles
 \ttl@box=\box57
 \beforetitleunit=\skip66
 \aftertitleunit=\skip67
-\ttl@plus=\dimen168
-\ttl@minus=\dimen169
+\ttl@plus=\dimen181
+\ttl@minus=\dimen182
 \ttl@toksa=\toks30
-\titlewidth=\dimen170
-\titlewidthlast=\dimen171
-\titlewidthfirst=\dimen172
+\titlewidth=\dimen183
+\titlewidthlast=\dimen184
+\titlewidthfirst=\dimen185
 )
 (C:\Users\angel\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-xet
 ex.def
 File: l3backend-xetex.def 2023-04-19 L3 backend support: XeTeX
-\g__graphics_track_int=\count290
+\g__graphics_track_int=\count294
 \l__pdf_internal_box=\box58
-\g__pdf_backend_object_int=\count291
-\g__pdf_backend_annotation_int=\count292
-\g__pdf_backend_link_int=\count293
-) (Relatorio_Inrush_DAX.aux
+\g__pdf_backend_object_int=\count295
+\g__pdf_backend_annotation_int=\count296
+\g__pdf_backend_link_int=\count297
+) (Relatorio_Inrush_DAX.aux)
+\openout1 = `Relatorio_Inrush_DAX.aux'.
 
-! LaTeX Error: Missing \begin{document}.
-
-See the LaTeX manual or LaTeX Companion for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.24 c
-      tion}{\numberline {3}Resultados}{2}{section.3}\protected@file@percent }
-? /cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 81.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 82.
 LaTeX Font Info:    Trying to load font information for TS1+cmr on input line 8
-1.
+2.
 
 (C:\Users\angel\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1cmr.fd
 File: ts1cmr.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -501,27 +518,27 @@ LaTeX Font Info:    ... okay on input line 81.
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 81.
+Package hyperref Info: Link coloring OFF on input line 82.
 (Relatorio_Inrush_DAX.out) (Relatorio_Inrush_DAX.out)
 \@outlinefile=\write3
 \openout3 = `Relatorio_Inrush_DAX.out'.
 
-File: figs/Picture1.png Graphic file (type bmp)
-<figs/Picture1.png>
-File: figs/Correntes.png Graphic file (type bmp)
-<figs/Correntes.png>
-LaTeX Font Info:    Trying to load font information for U+msa on input line 117
-.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 97.
+
 
 (C:\Users\angel\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 117
-.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 97.
+
 
 (C:\Users\angel\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
+File: figs/Picture1.png Graphic file (type bmp)
+<figs/Picture1.png>
+File: figs/Correntes.png Graphic file (type bmp)
+<figs/Correntes.png>
 File: figs/logo.png Graphic file (type bmp)
 <figs/logo.png>
 
@@ -540,30 +557,6 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 [1
 
 ]
-Overfull \hbox (4.86954pt too wide) in paragraph at lines 133--133
-[]|[]\TU/lmr/m/n/10 [1][]| 
- []
-
-
-Overfull \hbox (4.86954pt too wide) in paragraph at lines 138--138
-[]|[]\TU/lmr/m/n/10 [2][]| 
- []
-
-
-Overfull \hbox (4.86954pt too wide) in paragraph at lines 143--143
-[]|[]\TU/lmr/m/n/10 [3][]| 
- []
-
-
-Overfull \hbox (4.86954pt too wide) in paragraph at lines 148--148
-[]|[]\TU/lmr/m/n/10 [4][]| 
- []
-
-
-Overfull \hbox (4.86954pt too wide) in paragraph at lines 153--153
-[]|[]\TU/lmr/m/n/10 [5][]| 
- []
-
 File: figs/logo.png Graphic file (type bmp)
 <figs/logo.png>
 
@@ -580,6 +573,30 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                \addtolength{\topmargin}{-58.70549pt}.
 
 [2]
+Overfull \hbox (4.86954pt too wide) in paragraph at lines 160--160
+[]|[]\TU/lmr/m/n/10 [1][]| 
+ []
+
+
+Overfull \hbox (4.86954pt too wide) in paragraph at lines 165--165
+[]|[]\TU/lmr/m/n/10 [2][]| 
+ []
+
+
+Overfull \hbox (4.86954pt too wide) in paragraph at lines 170--170
+[]|[]\TU/lmr/m/n/10 [3][]| 
+ []
+
+
+Overfull \hbox (4.86954pt too wide) in paragraph at lines 175--175
+[]|[]\TU/lmr/m/n/10 [4][]| 
+ []
+
+
+Overfull \hbox (4.86954pt too wide) in paragraph at lines 180--180
+[]|[]\TU/lmr/m/n/10 [5][]| 
+ []
+
 File: figs/logo.png Graphic file (type bmp)
 <figs/logo.png>
 
@@ -603,15 +620,15 @@ LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-06-30>
  ***********
 Package rerunfilecheck Info: File `Relatorio_Inrush_DAX.out' has not changed.
-(rerunfilecheck)             Checksum: 0AE091ADC3BB3E2808E3C1D17F9E9BBC;530.
+(rerunfilecheck)             Checksum: 117DC0E3716F8D07345FE78B416C216D;710.
  ) 
 Here is how much of TeX's memory you used:
- 14691 strings out of 410678
- 248940 string characters out of 5792709
- 1924869 words of memory out of 5000000
- 35554 multiletter control sequences out of 15000+600000
+ 14765 strings out of 410678
+ 250077 string characters out of 5792709
+ 1934869 words of memory out of 5000000
+ 35625 multiletter control sequences out of 15000+600000
  560176 words of font info for 51 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 72i,21n,79p,581b,553s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,21n,79p,581b,638s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on Relatorio_Inrush_DAX.pdf (3 pages).

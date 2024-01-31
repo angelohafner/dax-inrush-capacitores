@@ -14,6 +14,7 @@
 \usepackage{indentfirst}
 \usepackage{hyperref}
 \usepackage{array}
+\usepackage{booktabs}
 
 \usepackage{titlesec} % Inclui o pacote titlesec
 % Redefinindo o formato do título da seção com um tamanho de fonte menor
@@ -91,6 +92,22 @@ A energização de um banco de capacitores (Figura \ref{fig:picture1}) pelo fech
 \item	de qualquer amortecimento do circuito devido a resistores de fechamento ou outra resistência no circuito.
 \end{itemize}
 	
+\section{Dados de entrada do banco}
+\begin{itemize}[label=\textendash]
+	\item	Potencia reativa  = {{potencia_reativa_do_banco}}
+	\item	Tensão trifásica  = {{tensao_trifasica}}
+	\item	Tensão monofásica  = {{tensao_monofasica}}
+	\item	Corrente de curto-circuito  = {{corrente_de_curto}}
+\end{itemize}
+
+\begin{center}
+	% INSERT_TABLE_HERE
+\end{center}
+
+
+
+	
+	
 \section{Considerações Iniciais}
 
 A corrente \textit{inrush} transitória não é um fator limitante em aplicações de bancos de capacitores isolados. Contudo, quando os bancos de capacitores são comutados \textit{back-to-back}, ou seja, quando um banco é acionado enquanto outro banco está conectado ao mesmo barramento, correntes transitórias de altas magnitude e frequência natural irão fluir entre o banco acionado e os que já estavam acionados.
@@ -118,9 +135,9 @@ Essa corrente oscilatória é limitada apenas pela impedância do banco de capac
 
 São os valores obtidos com o reator escolhido ($L_{reator} = {{indutancia_escolhida}} \, \mu \rm{H} $):
 \begin{itemize}[label=\textendash]
-	\item	Corrente de pico: ${{corrente_pico}} \, \rm{A}$;
-	\item	Frequência de Oscilação: ${{frequencia_oscilacao}} \, \rm{Hz}$
-	\item	Corrente inrush / Corrente nominal: ${{inrush_inominal}}$
+	\item	Corrente de pico: {{corrente_pico}}A;
+	\item	Frequência de Oscilação: {{frequencia_oscilacao}}Hz;
+	\item	Corrente inrush / Corrente nominal: {{inrush_inominal}}
 \end{itemize}
 
 \section{Conclusão}

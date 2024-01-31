@@ -4,8 +4,9 @@ aah@dax.energy
 """
 import locale
 locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
+from matplotlib.ticker import EngFormatter
 import numpy as np
-import base64
+import pandas as pd
 import streamlit as st
 import plotly.graph_objects as go
 from engineering_notation import EngNumber
@@ -48,12 +49,12 @@ st.markdown('# Resposta transitória da corrente de energização de capacitores
 
 col0, col1, col2 = st.columns([2, 0.2, 8])
 with col0:
-    V_ff = st.number_input("Tensão 3𝝋 [kV]", min_value=0.1, max_value=750.0, value=23.1, step=0.1, format="%.1f") * 1e3
+    V_ff = st.number_input("Tensão 3𝝋 [kV]", min_value=0.1, max_value=750.0, value=230.0, step=0.1, format="%.1f") * 1e3
     V_fn = V_ff / np.sqrt(3)
     f_fund = st.number_input("Frequência [Hz]", min_value=40.0, max_value=70.0, value=60.0, step=0.1, format="%.1f")
     w_fund = 2 * np.pi * f_fund
     I_curto_circuito = st.number_input("Corrente de curto-circuito na barra [kA]", min_value=0.0, max_value=1000.0,
-                                       value=25.0, step=1.0, format="%.0f") * 1e3
+                                       value=63.0, step=1.0, format="%.0f") * 1e3
     nr_bancos = st.slider("Número de Bancos", min_value=2, max_value=20, value=4, step=1)
     FC = st.slider("Fator de Segurança", min_value=1.0, max_value=1.5, value=1.4, step=0.1, format="%.1f")
 
@@ -78,7 +79,7 @@ k = 0
 k = 0
 with cols[ii]:
     Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                              min_value=0.01, max_value=100e3, value=100.00, step=0.01,
+                              min_value=0.01, max_value=1000e3, value=100e3, step=0.01,
                               key="Q_3f_" + str(k), format="%.2f") * 1e3
 ii = ii + 1
 with cols[ii]:
@@ -119,11 +120,11 @@ for k in range(1, nr_bancos):
     with cols[ii]:
         if k == 1:
             Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                                      min_value=0.01, max_value=100e3, value=100.00, step=0.01,
+                                      min_value=0.01, max_value=100e6, value=111e3, step=0.01,
                                       key="Q_3f_" + str(k), format="%.2f", label_visibility="visible") * 1e3
         else:
             Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                                      min_value=0.01, max_value=100e3, value=100.00, step=0.01,
+                                      min_value=0.01, max_value=100e6, value=95e3, step=0.01,
                                       key="Q_3f_" + str(k), format="%.2f", label_visibility="collapsed") * 1e3
     ii = ii + 1
     with cols[ii]:
@@ -176,8 +177,11 @@ for k in range(1, nr_bancos):
             L_reator[k] = st.number_input("$L_{\\rm reator} {\\rm \\left[{\\mu H} \\right]}$",
                                           min_value=0.1, max_value=10000.0, value=100.0, step=1.0,
                                           key="L_reator" + str(k), label_visibility="collapsed") * 1e-6
+
+
 # ===============================================================================================
 # === serve para o isolado e o back-to-back
+soma_Q_3f = sum(Q_3f)
 Q_1f = Q_3f / 3
 I_fn = Q_1f / V_fn
 X = V_fn / I_fn
@@ -212,6 +216,35 @@ sigma = R_eq / (2 * L_eq)
 t = np.linspace(0, 1 / 60, 1 * int(2 ** 12))
 i_curto = i_pico_inical * np.exp(-sigma * t) * np.sin(omega * t)
 # i_curto = i_curto + I_fn[0] * np.sqrt(2) * np.sin(w_fund * t)
+formatter = EngFormatter(unit='VAr', places=0)
+arrayQ3f_eng = [formatter.format_data(x) for x in Q_3f]
+arrayQ1f_eng = [formatter.format_data(x) for x in Q_1f]
+formatter = EngFormatter(unit='V', places=0)
+arrayV3f_eng = [formatter.format_data(x) for x in V_ff*np.ones(nr_bancos)]
+arrayV1f_eng = [formatter.format_data(x) for x in V_fn*np.ones(nr_bancos)]
+formatter = EngFormatter(unit='A', places=0)
+arrayI1f_eng = [formatter.format_data(x) for x in I_fn*np.ones(nr_bancos)]
+formatter = EngFormatter(unit='$\Omega$', places=1)
+arrayX1f_eng = [formatter.format_data(x) for x in X*np.ones(nr_bancos)]
+formatter = EngFormatter(unit='F', places=2)
+arrayC1f_eng = [formatter.format_data(x) for x in C*np.ones(nr_bancos)]
+formatter = EngFormatter(unit='H', places=0)
+arrayL1f_eng = [formatter.format_data(x) for x in L_reator]
+
+
+data = {
+    '$Q_{3\phi}$'  : arrayQ3f_eng,
+    '$Q_{1\phi}$'  : arrayQ1f_eng,
+    '$V_{3\phi}$'  : arrayV3f_eng,
+    '$V_{1\phi}$'  : arrayV1f_eng,
+    '$I_{1\phi}$'  : arrayI1f_eng,
+    '$X_{1\phi}$'  : arrayX1f_eng,
+    '$C_{1\phi}$'  : arrayC1f_eng,
+    '$L_{1\phi}$'  : arrayL1f_eng,
+}
+
+df = pd.DataFrame(data)
+# =====================================================================================================
 
 fig = go.Figure()
 
@@ -256,15 +289,16 @@ st.plotly_chart(fig, use_container_width=True)
 st.markdown('#### Resultados')
 st.write("Corrente nominal do banco $I_{\\rm nominal}=$", EngNumber(I_fn[0]), "A")
 st.markdown('##### Para banco único')
-temp = i_pico_inicial_isolado / (I_fn[0] * np.sqrt(2))
+
+temp1 = i_pico_inicial_isolado / (I_fn[0] * np.sqrt(2))
 st.write("Corrente de pico na energização $I_{\\rm{inrsuh}}=$",
-         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(temp, 1), "$\\times I_{\\rm{nominal}}$")
+         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(temp1, 1), "$\\times I_{\\rm{nominal}}$")
 st.write("Frequência de Oscilação = ", EngNumber(w_isolado / (2 * np.pi)), "${\\rm Hz}$, que corresponde a",
          np.round(w_isolado / w_fund, 1), "$\\times f_1$")#, com $\max \left( {\\frac{{di}}{{dt}}} \\right) = $", EngNumber((V_fn*np.sqrt(2)/L_eq_isolado)/1e6), "$\\frac{{\\rm{V}}}{{{\\rm{\\mu s}}}}$")
 st.markdown('##### Para banco com os demais bancos energizados')
-temp = i_pico_inical / (I_fn[0] * np.sqrt(2))
+corrente_pico_bancos_back_to_back = i_pico_inical / (I_fn * np.sqrt(2))
 st.write("Corrente de pico na energização $I_{\\rm{inrsuh}}=$",
-         EngNumber(i_pico_inical), "${\\rm A}$, que corresponde a", np.round(temp, 1), "$\\times I_{\\rm{nominal}}$")
+         EngNumber(i_pico_inical), "${\\rm A}$, que corresponde a", np.round(corrente_pico_bancos_back_to_back.max(), 1), "$\\times I_{\\rm{nominal}}$")
 st.write("Frequência de Oscilação = ", EngNumber(omega / (2 * np.pi)), "${\\rm Hz}$, que corresponde a",
          np.round(omega / w_fund, 1), "$\\times f_1$")
 # st.write("Harmônico de Oscilação = ", EngNumber(omega / w_fund))
@@ -274,6 +308,8 @@ st.markdown('#### Conclusão')
 st.markdown(
     'As amplitudes típicas das correntes de *inrush* para energização *back-to-back* de bancos de capacitores são de vários ${\\rm kA}$ com frequências de $2{\\rm~kHz}$ a $5{\\rm~kHz}$ [$^{[1]}$](https://ieeexplore.ieee.org/document/7035261).')
 conclusao1 = "cuidado aqui"
+temp = max(temp1, corrente_pico_bancos_back_to_back.max())
+
 if temp < 100:
     conclusao1 = "Reator adequado, conforme IEEE Std C37.012, p\\'{a}gina 16."
     st.write("Reator adequado, pois $\\dfrac{I_{\\rm inrush}}{I_{\\rm nominal}} = $", EngNumber(temp),
@@ -333,23 +369,43 @@ ax_mpl.legend()
 fig_mpl.savefig('figs/Correntes.png', bbox_inches='tight', dpi=600)
 
 flag_relatorio = 0
+
 if st.button('Gerar Relatório'):
     arquivo_original_tex = 'TEMPLATE_Relatorio_Inrush_DAX.tex'
     arquivo_copiado_tex = 'Relatorio_Inrush_DAX.tex'
     shutil.copy(arquivo_original_tex, arquivo_copiado_tex)
 
     # Valores a serem substituídos
+    formatter_VAr = EngFormatter(places=0)
+    formatter_V = EngFormatter(places=0)
+    formatter_A = EngFormatter(places=0)
+    formatter_H = EngFormatter(places=1)
+    formatter_Hz = EngFormatter(places=0)
+    formatter_pu = EngFormatter(places=1)
+
     valores = {
-        "indutancia_escolhida": locale.format_string("%.2f", 1e6*L_reator[0], grouping=True),
-        "corrente_pico":        locale.format_string("%.2f", i_pico_inical, grouping=True),
-        "frequencia_oscilacao": locale.format_string("%.2f", omega / (2 * np.pi), grouping=True),
-        "inrush_inominal":      locale.format_string("%.0f", i_pico_inical / (I_fn[0] * np.sqrt(2)), grouping=True),
+        "potencia_reativa_do_banco": formatter_VAr.format_data(soma_Q_3f),
+        "tensao_trifasica": formatter_V.format_data(V_ff),
+        "tensao_monofasica": formatter_V.format_data(V_fn),
+        "corrente_de_curto": formatter_A.format_data(I_curto_circuito),
+        "indutancia_escolhida": formatter_H.format_data(1e6*L_reator[0]),
+        "corrente_pico":        formatter_A.format_data(i_pico_inical),
+        "frequencia_oscilacao": formatter_Hz.format_data(omega / (2 * np.pi)),
+        "inrush_inominal":      formatter_pu.format_data(i_pico_inical / (I_fn[0] * np.sqrt(2))),
         "conclusao1": conclusao1,
-        "cem": locale.format_string("%.0f", cem, grouping=True)
+        "cem": formatter_pu.format_data(cem)
     }
 
     # Substituindo os valores no arquivo copiado
     substituir_valores(arquivo_copiado_tex, valores)
+    # Adiconando tabela de dados
+    latex_table = df.to_latex(header=True, index=True, float_format="%.2f")
+    with open(arquivo_copiado_tex, 'r', encoding='utf-8') as file:
+        content = file.read()
+    updated_content = content.replace('% INSERT_TABLE_HERE', latex_table)
+    with open(arquivo_copiado_tex, 'w', encoding='utf-8') as file:
+        file.write(updated_content)
+
 
     # Compilar o arquivo .tex para criar um PDF
     os.system(f"xelatex {arquivo_copiado_tex}")
