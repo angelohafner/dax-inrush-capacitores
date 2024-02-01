@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 23.5) (preloaded format=xelatex 2024.1.7)  31 JAN 2024 14:30
+This is XeTeX, Version 3.141592653-2.6-0.999995 (MiKTeX 23.5) (preloaded format=xelatex 2024.1.7)  1 FEB 2024 10:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -539,17 +539,18 @@ File: figs/Picture1.png Graphic file (type bmp)
 <figs/Picture1.png>
 File: figs/Correntes.png Graphic file (type bmp)
 <figs/Correntes.png>
+File: figs/logo.png Graphic file (type bmp)
+<figs/logo.png>
 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.146 ...tor escolhido ($L_{reator} = $100.0$ $\mu
-                                                  $H \, \mu \rm{H} $):
-? ht is too small (12.0pt): 
+Overfull \hbox (9.14719pt too wide) has occurred while \output is active
+ [][] 
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 70.70549pt, for example:
 (fancyhdr)                \setlength{\headheight}{70.70549pt}.
-(fancyhdr)                You mig       kA \, \rm{A}$;
-? smaller to compensate:
+(fancyhdr)                You might also make \topmargin smaller to compensate:
 
 (fancyhdr)                \addtolength{\topmargin}{-58.70549pt}.
 
@@ -624,7 +625,7 @@ Package rerunfilecheck Info: File `Relatorio_Inrush_DAX.out' has not changed.
 Here is how much of TeX's memory you used:
  14765 strings out of 410678
  250077 string characters out of 5792709
- 1934869 words of memory out of 5000000
+ 1935869 words of memory out of 5000000
  35625 multiletter control sequences out of 15000+600000
  560176 words of font info for 51 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191

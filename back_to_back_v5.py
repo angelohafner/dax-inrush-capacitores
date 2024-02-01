@@ -197,22 +197,32 @@ den_i = L_eq_isolado * w_isolado
 i_pico_inicial_isolado = FC * num_i / den_i
 
 # === back-to-back ===
+i_pico_inical_list = []
+sigma_list = []
+omega_list = []
 def back_to_back(C, L):
-    C_paralelos = np.sum(C[1:])
-    den_C = 1 / C[0] + 1 / C_paralelos
-    C_eq = 1 / den_C
+    for nn in range(2, len(C)+1, 1): # muito cuidado, o "+1" é imperativo
+        C_paralelos = np.sum(C[1:nn])
+        den_C = 1 / C[0] + 1 / C_paralelos
+        C_eq = 1 / den_C
 
-    L_paralelos = 1 / np.sum(1 / L[1:])
-    L_eq = L[0] + L_paralelos
+        L_paralelos = 1 / np.sum(1 / L[1:nn])
+        L_eq = L[0] + L_paralelos
 
-    raiz = -(R_eq / L_eq) ** 2 + 4 / (C_eq * L_eq)
-    omega = np.sqrt(raiz) / 2
-    num_i = V_fn * np.sqrt(2)
-    den_i = L_eq * omega
-    i_pico_inical = FC * num_i / den_i
-    sigma = R_eq / (2 * L_eq)
-    return [i_pico_inical, sigma, omega]
-i_pico_inical, sigma, omega = back_to_back(C, L)
+        raiz = -(R_eq / L_eq) ** 2 + 4 / (C_eq * L_eq)
+        omega = np.sqrt(raiz) / 2
+        omega_list.append(omega)
+        num_i = V_fn * np.sqrt(2)
+        den_i = L_eq * omega
+        i_pico_inical_list.append(FC * num_i / den_i)
+        sigma_list.append(R_eq / (2 * L_eq))
+
+back_to_back(C, L)
+i_pico_inicaL_todos_pu = np.array([i_pico_inicial_isolado] + i_pico_inical_list) / (I_fn * np.sqrt(2))
+omega_list_todos = np.array([w_isolado] + omega_list)
+i_pico_inical = i_pico_inical_list[-1]
+sigma = sigma_list[-1]
+omega = omega_list[-1]
 t = np.linspace(0, 1 / 60, 1 * int(2 ** 12))
 i_curto = i_pico_inical * np.exp(-sigma * t) * np.sin(omega * t)
 # i_curto = i_curto + I_fn[0] * np.sqrt(2) * np.sin(w_fund * t)
@@ -230,7 +240,10 @@ formatter = EngFormatter(unit='F', places=2)
 arrayC1f_eng = [formatter.format_data(x) for x in C*np.ones(nr_bancos)]
 formatter = EngFormatter(unit='H', places=0)
 arrayL1f_eng = [formatter.format_data(x) for x in L_reator]
-
+formatter = EngFormatter(places=1)
+array_i_pico_inicaL_todos_pu_eng = [formatter.format_data(x) for x in i_pico_inicaL_todos_pu]
+formatter = EngFormatter(unit='Hz', places=0)
+array_frequencia_Hz_list_todos_eng = [formatter.format_data(x) for x in omega_list_todos/(2*np.pi)]
 
 data = {
     '$Q_{3\phi}$'  : arrayQ3f_eng,
@@ -241,6 +254,8 @@ data = {
     '$X_{1\phi}$'  : arrayX1f_eng,
     '$C_{1\phi}$'  : arrayC1f_eng,
     '$L_{1\phi}$'  : arrayL1f_eng,
+    '$I_{p}/I_{n}$': array_i_pico_inicaL_todos_pu_eng,
+    '$f_{0}$'      : array_frequencia_Hz_list_todos_eng,
 }
 
 df = pd.DataFrame(data)
@@ -290,9 +305,10 @@ st.markdown('#### Resultados')
 st.write("Corrente nominal do banco $I_{\\rm nominal}=$", EngNumber(I_fn[0]), "A")
 st.markdown('##### Para banco único')
 
-temp1 = i_pico_inicial_isolado / (I_fn[0] * np.sqrt(2))
+corrente_pico_bancos_isolado = i_pico_inicial_isolado / (I_fn[0] * np.sqrt(2))
+
 st.write("Corrente de pico na energização $I_{\\rm{inrsuh}}=$",
-         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(temp1, 1), "$\\times I_{\\rm{nominal}}$")
+         EngNumber(i_pico_inicial_isolado), "${\\rm A}$,$~$que corresponde a", np.round(corrente_pico_bancos_isolado, 1), "$\\times I_{\\rm{nominal}}$")
 st.write("Frequência de Oscilação = ", EngNumber(w_isolado / (2 * np.pi)), "${\\rm Hz}$, que corresponde a",
          np.round(w_isolado / w_fund, 1), "$\\times f_1$")#, com $\max \left( {\\frac{{di}}{{dt}}} \\right) = $", EngNumber((V_fn*np.sqrt(2)/L_eq_isolado)/1e6), "$\\frac{{\\rm{V}}}{{{\\rm{\\mu s}}}}$")
 st.markdown('##### Para banco com os demais bancos energizados')
@@ -308,7 +324,7 @@ st.markdown('#### Conclusão')
 st.markdown(
     'As amplitudes típicas das correntes de *inrush* para energização *back-to-back* de bancos de capacitores são de vários ${\\rm kA}$ com frequências de $2{\\rm~kHz}$ a $5{\\rm~kHz}$ [$^{[1]}$](https://ieeexplore.ieee.org/document/7035261).')
 conclusao1 = "cuidado aqui"
-temp = max(temp1, corrente_pico_bancos_back_to_back.max())
+temp = max(corrente_pico_bancos_isolado, corrente_pico_bancos_back_to_back.max())
 
 if temp < 100:
     conclusao1 = "Reator adequado, conforme IEEE Std C37.012, p\\'{a}gina 16."
@@ -366,7 +382,7 @@ ax_mpl.plot(t * 1e3, i_pico_inical * np.sin(2 * np.pi * f_fund * t) / 1e3, label
 ax_mpl.set_xlabel('Tempo [ms]')
 ax_mpl.set_ylabel('Corrente [kA]')
 ax_mpl.legend()
-fig_mpl.savefig('figs/Correntes.png', bbox_inches='tight', dpi=600)
+fig_mpl.savefig('figs/Correntes.png', bbox_inches='tight', dpi=300)
 
 flag_relatorio = 0
 
@@ -376,11 +392,11 @@ if st.button('Gerar Relatório'):
     shutil.copy(arquivo_original_tex, arquivo_copiado_tex)
 
     # Valores a serem substituídos
-    formatter_VAr = EngFormatter(places=0)
-    formatter_V = EngFormatter(places=0)
-    formatter_A = EngFormatter(places=0)
+    formatter_VAr = EngFormatter(places=0, unit='VAr')
+    formatter_V = EngFormatter(places=0, unit='V')
+    formatter_A = EngFormatter(places=0, unit='A')
     formatter_H = EngFormatter(places=1)
-    formatter_Hz = EngFormatter(places=0)
+    formatter_Hz = EngFormatter(places=1)
     formatter_pu = EngFormatter(places=1)
 
     valores = {
@@ -391,7 +407,7 @@ if st.button('Gerar Relatório'):
         "indutancia_escolhida": formatter_H.format_data(1e6*L_reator[0]),
         "corrente_pico":        formatter_A.format_data(i_pico_inical),
         "frequencia_oscilacao": formatter_Hz.format_data(omega / (2 * np.pi)),
-        "inrush_inominal":      formatter_pu.format_data(i_pico_inical / (I_fn[0] * np.sqrt(2))),
+        "inrush_inominal":      formatter_pu.format_data(i_pico_inicaL_todos_pu.max()),####
         "conclusao1": conclusao1,
         "cem": formatter_pu.format_data(cem)
     }
