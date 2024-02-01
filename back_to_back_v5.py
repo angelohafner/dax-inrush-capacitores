@@ -2,8 +2,6 @@
 Angelo Alfredo Hafner
 aah@dax.energy
 """
-import locale
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
 from matplotlib.ticker import EngFormatter
 import numpy as np
 import pandas as pd
@@ -199,20 +197,22 @@ den_i = L_eq_isolado * w_isolado
 i_pico_inicial_isolado = FC * num_i / den_i
 
 # === back-to-back ===
-C_paralelos = np.sum(C[1:])
-den_C = 1 / C[0] + 1 / C_paralelos
-C_eq = 1 / den_C
+def back_to_back(C, L):
+    C_paralelos = np.sum(C[1:])
+    den_C = 1 / C[0] + 1 / C_paralelos
+    C_eq = 1 / den_C
 
-L_paralelos = 1 / np.sum(1 / L[1:])
-L_eq = L[0] + L_paralelos
+    L_paralelos = 1 / np.sum(1 / L[1:])
+    L_eq = L[0] + L_paralelos
 
-raiz = -(R_eq / L_eq) ** 2 + 4 / (C_eq * L_eq)
-omega = np.sqrt(raiz) / 2
-num_i = V_fn * np.sqrt(2)
-den_i = L_eq * omega
-i_pico_inical = FC * num_i / den_i
-sigma = R_eq / (2 * L_eq)
-
+    raiz = -(R_eq / L_eq) ** 2 + 4 / (C_eq * L_eq)
+    omega = np.sqrt(raiz) / 2
+    num_i = V_fn * np.sqrt(2)
+    den_i = L_eq * omega
+    i_pico_inical = FC * num_i / den_i
+    sigma = R_eq / (2 * L_eq)
+    return [i_pico_inical, sigma, omega]
+i_pico_inical, sigma, omega = back_to_back(C, L)
 t = np.linspace(0, 1 / 60, 1 * int(2 ** 12))
 i_curto = i_pico_inical * np.exp(-sigma * t) * np.sin(omega * t)
 # i_curto = i_curto + I_fn[0] * np.sqrt(2) * np.sin(w_fund * t)
