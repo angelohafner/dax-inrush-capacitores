@@ -11,7 +11,7 @@ from engineering_notation import EngNumber
 import os
 import shutil
 import matplotlib as mpl
-mpl.rcParams['text.usetex'] = True
+# mpl.rcParams['text.usetex'] = True
 mpl.rcParams['font.family'] = 'serif'  # ou 'sans-serif'
 # ===================================================================================
 def substituir_valores(arquivo_tex, valores):
