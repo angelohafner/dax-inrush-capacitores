@@ -3,6 +3,7 @@ Angelo Alfredo Hafner
 aah@dax.energy
 """
 from matplotlib.ticker import EngFormatter
+from relatorio_makdown import *
 import numpy as np
 import pandas as pd
 import streamlit as st
@@ -424,8 +425,9 @@ if st.button('Gerar Relatório'):
 
 
     # Compilar o arquivo .tex para criar um PDF
-    os.system(f"xelatex {arquivo_copiado_tex}")
+    #os.system(f"xelatex {arquivo_copiado_tex}")
     flag_relatorio = 1
+    relat_markdown()
 
 
 if flag_relatorio:
