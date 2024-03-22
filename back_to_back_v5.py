@@ -2,6 +2,13 @@
 Angelo Alfredo Hafner
 aah@dax.energy
 """
+# cuidado
+indutor = 150.0
+reativos = 7.2e3
+tensao = 72.0
+nbc = 2
+ccc = 31.5
+
 from matplotlib.ticker import EngFormatter
 from relatorio_makdown import *
 import numpy as np
@@ -48,13 +55,13 @@ st.markdown('# Resposta transitória da corrente de energização de capacitores
 
 col0, col1, col2 = st.columns([2, 0.2, 8])
 with col0:
-    V_ff = st.number_input("Tensão 3𝝋 [kV]", min_value=0.1, max_value=750.0, value=230.0, step=0.1, format="%.1f") * 1e3
+    V_ff = st.number_input("Tensão 3𝝋 [kV]", min_value=0.1, max_value=750.0, value=tensao, format="%.1f") * 1e3
     V_fn = V_ff / np.sqrt(3)
     f_fund = st.number_input("Frequência [Hz]", min_value=40.0, max_value=70.0, value=60.0, step=0.1, format="%.1f")
     w_fund = 2 * np.pi * f_fund
-    I_curto_circuito = st.number_input("Corrente de curto-circuito na barra [kA]", min_value=0.0, max_value=1000.0,
-                                       value=63.0, step=1.0, format="%.0f") * 1e3
-    nr_bancos = st.slider("Número de Bancos", min_value=2, max_value=20, value=4, step=1)
+    I_curto_circuito = st.number_input("Corrente de curto-circuito na barra [kA]", min_value=0.0, max_value=99e99,
+                                       value=ccc, format="%.0f") * 1e3
+    nr_bancos = st.slider("Número de Bancos", min_value=2, max_value=20, value=nbc, step=1)
     FC = st.slider("Fator de Segurança", min_value=1.0, max_value=1.5, value=1.4, step=0.1, format="%.1f")
 
 with col2:
@@ -78,7 +85,7 @@ k = 0
 k = 0
 with cols[ii]:
     Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                              min_value=0.01, max_value=1000e3, value=100e3, step=0.01,
+                              min_value=0.01, max_value=1000e3, value=reativos, step=0.01,
                               key="Q_3f_" + str(k), format="%.2f") * 1e3
 ii = ii + 1
 with cols[ii]:
@@ -108,7 +115,7 @@ with cols[ii]:
 ii = ii + 1
 with cols[ii]:
     L_reator[k] = st.number_input("$L_{\\rm reator} {\\rm \\left[{\\mu H} \\right]}$",
-                                  min_value=0.0, max_value=1000.0, value=100.0, step=1.0,
+                                  min_value=0.0, max_value=1000.0, value=indutor, step=1.0,
                                   key="L_reator" + str(k), format="%.1f") * 1e-6
 
 st.markdown("#### Bancos já energizados $(\#1$ ao $\#n)$")
@@ -119,11 +126,11 @@ for k in range(1, nr_bancos):
     with cols[ii]:
         if k == 1:
             Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                                      min_value=0.01, max_value=100e6, value=111e3, step=0.01,
+                                      min_value=0.01, max_value=100e6, value=reativos,
                                       key="Q_3f_" + str(k), format="%.2f", label_visibility="visible") * 1e3
         else:
             Q_3f[k] = st.number_input("$Q_{3\\varphi}$[kVAr] ",
-                                      min_value=0.01, max_value=100e6, value=95e3, step=0.01,
+                                      min_value=0.01, max_value=100e6, value=reativos,
                                       key="Q_3f_" + str(k), format="%.2f", label_visibility="collapsed") * 1e3
     ii = ii + 1
     with cols[ii]:
@@ -170,11 +177,11 @@ for k in range(1, nr_bancos):
     with cols[ii]:
         if k == 1:
             L_reator[k] = st.number_input("$L_{\\rm reator} {\\rm \\left[{\\mu H} \\right]}$",
-                                          min_value=0.1, max_value=10000.0, value=100.0, step=1.0,
+                                          min_value=0.1, max_value=10000.0, value=indutor, step=1.0,
                                           key="L_reator" + str(k), label_visibility="visible") * 1e-6
         else:
             L_reator[k] = st.number_input("$L_{\\rm reator} {\\rm \\left[{\\mu H} \\right]}$",
-                                          min_value=0.1, max_value=10000.0, value=100.0, step=1.0,
+                                          min_value=0.1, max_value=10000.0, value=indutor, step=1.0,
                                           key="L_reator" + str(k), label_visibility="collapsed") * 1e-6
 
 
@@ -227,23 +234,23 @@ omega = omega_list[-1]
 t = np.linspace(0, 1 / 60, 1 * int(2 ** 12))
 i_curto = i_pico_inical * np.exp(-sigma * t) * np.sin(omega * t)
 # i_curto = i_curto + I_fn[0] * np.sqrt(2) * np.sin(w_fund * t)
-formatter = EngFormatter(unit='VAr', places=0)
+formatter = EngFormatter(unit='VAr', places=1)
 arrayQ3f_eng = [formatter.format_data(x) for x in Q_3f]
 arrayQ1f_eng = [formatter.format_data(x) for x in Q_1f]
-formatter = EngFormatter(unit='V', places=0)
+formatter = EngFormatter(unit='V', places=1)
 arrayV3f_eng = [formatter.format_data(x) for x in V_ff*np.ones(nr_bancos)]
 arrayV1f_eng = [formatter.format_data(x) for x in V_fn*np.ones(nr_bancos)]
-formatter = EngFormatter(unit='A', places=0)
+formatter = EngFormatter(unit='A', places=1)
 arrayI1f_eng = [formatter.format_data(x) for x in I_fn*np.ones(nr_bancos)]
 formatter = EngFormatter(unit='$\Omega$', places=1)
 arrayX1f_eng = [formatter.format_data(x) for x in X*np.ones(nr_bancos)]
 formatter = EngFormatter(unit='F', places=2)
 arrayC1f_eng = [formatter.format_data(x) for x in C*np.ones(nr_bancos)]
-formatter = EngFormatter(unit='H', places=0)
+formatter = EngFormatter(unit='H', places=1)
 arrayL1f_eng = [formatter.format_data(x) for x in L_reator]
 formatter = EngFormatter(places=1)
 array_i_pico_inicaL_todos_pu_eng = [formatter.format_data(x) for x in i_pico_inicaL_todos_pu]
-formatter = EngFormatter(unit='Hz', places=0)
+formatter = EngFormatter(unit='Hz', places=1)
 array_frequencia_Hz_list_todos_eng = [formatter.format_data(x) for x in omega_list_todos/(2*np.pi)]
 
 data = {
@@ -368,7 +375,7 @@ with col_bib2:
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import datetime as dt
-from docx2pdf import convert
+# from docx2pdf import convert
 
 t = np.asarray(t)
 i_curto = i_pico_inical * np.exp(-sigma * t) * np.sin(omega * t)
@@ -385,7 +392,7 @@ ax_mpl.set_ylabel('Corrente [kA]')
 ax_mpl.legend()
 fig_mpl.savefig('figs/Correntes.png', bbox_inches='tight', dpi=300)
 
-flag_relatorio = 0
+flag_relatorio = 1
 
 if st.button('Gerar Relatório'):
     arquivo_original_tex = 'TEMPLATE_Relatorio_Inrush_DAX.tex'
@@ -425,9 +432,9 @@ if st.button('Gerar Relatório'):
 
 
     # Compilar o arquivo .tex para criar um PDF
-    #os.system(f"xelatex {arquivo_copiado_tex}")
+    os.system(f"xelatex {arquivo_copiado_tex}")
     flag_relatorio = 1
-    relat_markdown()
+    # relat_markdown()
 
 
 if flag_relatorio:
